@@ -12,6 +12,8 @@ phases:
     commands:
       - echo "Starting build phase..."
       - docker build -t my-nginx-image .
+      # Generate the imagedefinitions.json file
+      - echo '[{"name":"vamsee","imageUri":"your-dockerhub-username/my-nginx-image:latest"}]' > imagedefinitions.json
   post_build:
     commands:
       - echo "Starting post_build phase..."
@@ -20,4 +22,4 @@ phases:
 artifacts:
   files:
     - '**/*'
-
+    - imagedefinitions.json
