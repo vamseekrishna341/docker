@@ -1,27 +1,10 @@
-version: 0.2
-
-phases:
-  pre_build:
-    commands:
-      - echo "Logging in to Amazon ECR..."
-      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 381492219902.dkr.ecr.us-east-2.amazonaws.com
-      - echo "Pulling base image from ECR..."
-      - docker pull 381492219902.dkr.ecr.us-east-2.amazonaws.com/nginx:latest
-
-  build:
-    commands:
-      - echo "Starting build phase..."
-      - docker build -t my-nginx-image .
-
-      # Generate the imagedefinitions.json file
-      - echo '[{"name":"vamsee","imageUri":"381492219902.dkr.ecr.us-east-2.amazonaws.com/my-nginx-image:latest"}]' > imagedefinitions.json
-
-  post_build:
-    commands:
-      - echo "Starting post_build phase..."
-      - docker images
-
-artifacts:
-  files:
-    - '**/*'
-    - imagedefinitions.json
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-caching-server
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
