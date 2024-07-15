@@ -1,10 +1,23 @@
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx-caching-server
-spec:
-  containers:
-  - name: nginx
-    image: nginx:latest
-    ports:
-    - containerPort: 80
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+    commands:
+      - echo "Installing dependencies..."
+  pre_build:
+    commands:
+      - echo "Starting pre_build phase..."
+  build:
+    commands:
+      - echo "Starting build phase..."
+      - docker build -t my-nginx-image .
+  post_build:
+    commands:
+      - echo "Starting post_build phase..."
+      - docker images
+
+artifacts:
+  files:
+    - '**/*'
+
