@@ -1,23 +1,26 @@
 version: 0.2
 
 phases:
-  pre_build:
+  install:
+    runtime-versions:
+      docker: 19
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 381492219902.dkr.ecr.$AWS_REGION.amazonaws.com
-  build:
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin <381492219902>.dkr.ecr.us-east-2.amazonaws.com
+  pre_build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t my-app .
-      - docker tag my-app:latest 381492219902.dkr.ecr.$AWS_REGION.amazonaws.com/my-app:latest
-  post_build:
+      - docker build -t <docker> .
+      - docker tag <your-repo-name>:latest <your-account-id>.dkr.ecr.us-east-2.amazonaws.com/<your-repo-name>:latest
+  build:
     commands:
       - echo Build completed on `date`
+  post_build:
+    commands:
       - echo Pushing the Docker image...
-      - docker push 381492219902.dkr.ecr.$AWS_REGION.amazonaws.com/my-app:latest
+      - docker push <381492219902>.dkr.ecr.us-east-2.amazonaws.com/<your-repo-name>:latest
 artifacts:
   files:
     - '**/*'
-
-
+  discard-paths: yes
