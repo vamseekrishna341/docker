@@ -12,14 +12,14 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build -t my-ecr-repo .
-      - docker tag docker:latest 381492219902.dkr.ecr.us-east-2.amazonaws.com/docker:latest
+      - docker tag docker:latest 381492219902.dkr.ecr.us-east-2.amazonaws.com/my-ecr-repo:latest
   build:
     commands:
       - echo Build completed on `date`
   post_build:
     commands:
       - echo Pushing the Docker image...
-      - docker push 381492219902.dkr.ecr.us-east-2.amazonaws.com/docker:latest
+      - docker push 381492219902.dkr.ecr.us-east-2.amazonaws.com/my-ecr-repo:latest
 artifacts:
   files:
     - '**/*'
