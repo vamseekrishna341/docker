@@ -6,26 +6,26 @@ phases:
       docker: 19
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 381492219902.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 381492219902.dkr.ecr.ap-south-1.amazonaws.com
   pre_build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t v1:latest .
+      - docker build -t project-repo:latest .
   build:
     commands:
       - echo Build started on `date`
       - echo Tagging the Docker image...
-      - docker tag v1:latest 381492219902.dkr.ecr.us-east-1.amazonaws.com/v1:latest
-      - docker tag v1:latest 381492219902.dkr.ecr.us-east-1.amazonaws.com/v1:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker tag v1:latest 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:latest
+      - docker tag v1:latest 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:$CODEBUILD_RESOLVED_SOURCE_VERSION
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push 381492219902.dkr.ecr.us-east-1.amazonaws.com/v1:latest
-      - docker push 381492219902.dkr.ecr.us-east-1.amazonaws.com/v1:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:latest
+      - docker push 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Writing image definitions file...
-      - printf '[{"name":"sample-app","imageUri":"%s"}]' 381492219902.dkr.ecr.us-east-1.amazonaws.com/v1:$CODEBUILD_RESOLVED_SOURCE_VERSION > imagedefinitions.json
+      - printf '[{"name":"sample-app","imageUri":"%s"}]' 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:$CODEBUILD_RESOLVED_SOURCE_VERSION > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
