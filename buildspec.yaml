@@ -6,26 +6,24 @@ phases:
       docker: 19
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 381492219902.dkr.ecr.ap-south-1.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   pre_build:
     commands:
-      - echo Build started on `date`
+      - echo Build started on date
       - echo Building the Docker image...
-      - docker build -t project-repo:latest .
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
   build:
     commands:
-      - echo Build started on `date`
+      - echo Build started on date
       - echo Tagging the Docker image...
-      - docker tag project-repo:latest 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:latest
-      - docker tag project-repo:latest 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:
     commands:
-      - echo Build completed on `date`
+      - echo Build completed on date
       - echo Pushing the Docker image...
-      - docker push 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:latest
-      - docker push 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"sample-app","imageUri":"%s"}]' 381492219902.dkr.ecr.ap-south-1.amazonaws.com/project-repo:$CODEBUILD_RESOLVED_SOURCE_VERSION > imagedefinitions.json
+      - printf '[{"name":"sample-app","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
